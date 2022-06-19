@@ -1,0 +1,12 @@
+# python
+__pycache__
+.pyc
+
+# data
+.png
+.jpg
+.jpeg
+.bmp
+.gif
+.mp4
+.m4v

@@ -1,0 +1,61 @@
+table {
+    border: black 1px solid;
+    padding: 0.5rem;
+    margin: 1rem;
+    width: calc(100% - 2rem);
+
+    tr {
+        border-top: solid 1px black;
+    }
+}
+
+.list thead {
+    text-align: left;
+}
+
+.upload-zone {
+    margin-left: 1rem;
+    width: calc(100% - 3rem);
+    padding: 0.5rem;
+    border: 1px solid black;
+}
+
+
+form {
+    input {
+        margin-left: 2rem;
+    }
+}
+
+.editor {
+    margin: 1rem; 
+    padding: 0.5rem; 
+    display: grid; 
+    grid-template-columns: 1fr 440px; 
+    gap: 1rem;
+    border: solid 1px black;
+
+    img {
+        width: 100%;
+    }
+    
+    .im-one {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .im-two {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    .lbl-one {
+        grid-column: 2;
+        grid-row: 1;
+    }
+
+    .lbl-two {
+        grid-column: 2;
+        grid-row: 2;
+    }
+}

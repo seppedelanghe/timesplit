@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://unpkg.com/vue@3"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <link rel="stylesheet" href="/static/app.css">
+
+    <title>annotator</title>
+</head>
+<body>
+    <header style="margin: 2rem;">
+      <h1>
+        TimeSplit annotator
+      </h1>
+    </header>
+
+    <main id="app">
+      <div v-if="selected != null" class="editor" >
+        <div class="im-one" >
+          <img id="image" :src="`/static/data/${images[selected]}`" />
+        </div>
+        
+        <div class="im-two">
+          <img id="image" :src="`/static/data/${images[selected + 1]}`" />
+        </div>
+
+        <div class="lbl-one" v-if="labels && labels.length == 2">
+          <table>
+            <thead>
+              <th>
+                match
+              </th>
+              <th>
+                X
+              </th>
+              <th>
+                Y
+              </th>
+              <th>
+                W
+              </th>
+              <th>
+                H
+              </th>
+            </thead>
+
+            <tr v-for="label in labels[0]">
+              <td>
+                <input type="radio" />
+              </td>
+              <td>
+                {{ label[1] }}
+              </td>
+              <td>
+                {{ label[2] }}
+              </td>
+              <td>
+                {{ label[3] }}
+              </td>
+              <td>
+                {{ label[4] }}
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="lbl-two">
+          <table>
+            <thead>
+              <th>
+                match
+              </th>
+              <th>
+                X
+              </th>
+              <th>
+                Y
+              </th>
+              <th>
+                W
+              </th>
+              <th>
+                H
+              </th>
+            </thead>
+
+            <tr v-for="label in labels[1]">
+              <td>
+                <input type="radio" />
+              </td>
+              <td>
+                {{ label[1] }}
+              </td>
+              <td>
+                {{ label[2] }}
+              </td>
+              <td>
+                {{ label[3] }}
+              </td>
+              <td>
+                {{ label[4] }}
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <table class="list">
+        <thead>
+          <th>
+            name
+          </th>
+          <th>
+            show
+          </th>
+        </thead>
+
+        <tbody>
+          <tr v-for="im, i in images">
+            <td >
+              {{ im }}
+            </td>
+
+            <td>
+              <button @click="() => { setImage(i) }">
+                Show
+              </button>
+            </td>
+          </tr>
+          
+        </tbody>
+      </table>
+
+      <div class="upload-zone">
+        <div>
+          <b>
+            Upload image:
+          </b>
+        </div>
+        <br/>
+        <form action="/img" method="post" enctype="multipart/form-data">
+          <label for="files">Select images </label>
+          <input type="file" id="files" name="files" accept="image/jpg" multiple>
+          <input type="submit">
+        </form>
+
+        <br/>
+
+        <form action="/lbl" method="post" enctype="multipart/form-data">
+          <label for="files">Select label(s)</label>
+          <input type="file" id="files" name="files" accept=".txt" multiple>
+          <input type="submit">
+        </form>
+      </div>
+    </main>
+
+    <script>
+        const { createApp } = Vue
+        
+        createApp({
+          created() {
+            this.getAll();
+          },
+          data() {
+            return {
+              images: [],
+              selected: null,
+              labels: [],
+            }
+          },
+          methods: {
+            getAll: function () {
+              axios.get('/all')
+              .then(resp => {
+                console.log(resp);
+                this.images = resp.data.images;
+                this.setImage(0);
+              }).catch(err => {
+                console.error(err);
+              });
+            },
+            setImage: function (i) {
+              this.selected = i;
+              this.getLabels();
+            },
+            getLabels: function () {
+              this.labels = [];
+              
+              axios.get(`/lbl?img=${this.images[this.selected]}`)
+              .then(resp => {
+                console.log(resp);
+                this.labels.push(resp.data);
+              }).catch(err => {
+                console.error(err);
+              });
+
+              axios.get(`/lbl?img=${this.images[this.selected + 1]}`)
+              .then(resp => {
+                console.log(resp);
+                this.labels.push(resp.data);
+              }).catch(err => {
+                console.error(err);
+              });
+            }
+            
+            
+          }
+        }).mount('#app')
+      </script>
+</body>
+</html>

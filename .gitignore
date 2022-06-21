@@ -1,12 +1,16 @@
 # python
 __pycache__
-.pyc
+*.pyc
 
 # data
-.png
-.jpg
-.jpeg
-.bmp
-.gif
-.mp4
-.m4v
+*.png
+*.jpg
+*.jpeg
+*.bmp
+*.gif
+*.mp4
+*.m4v
+
+# web
+*.css
+*.css.map

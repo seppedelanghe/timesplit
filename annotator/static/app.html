@@ -192,8 +192,9 @@
             getAll: function () {
               axios.get('/all')
               .then(resp => {
-                console.log(resp);
                 this.images = resp.data.images;
+                this.setFrom(0);
+                this.setTo(1);
               }).catch(err => {
                 console.error(err);
               });

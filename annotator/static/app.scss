@@ -28,15 +28,28 @@ form {
 }
 
 .editor {
-    margin: 1rem; 
-    padding: 0.5rem; 
+    max-width: calc(800px + 440px);
+    margin: 1rem;
     display: grid; 
     grid-template-columns: 1fr 440px;
-    gap: 1rem;
     border: solid 1px black;
+    gap: 0 1rem;
 
     img {
+        margin: 1rem;
         width: 100%;
+        max-width: 800px;
+        min-width: 320px;
+    }
+
+    table {
+        margin: 1rem;
+
+        thead {
+            background-color: lightgrey;
+        }
+
+        tr:nth-child(even) {background-color: #c2f2f2;}
     }
     
     .im-one {

@@ -20,20 +20,20 @@
     </header>
 
     <main id="app">
-      <div v-if="selected != null" class="editor" >
+      <div v-if="from != null && to != null" class="editor" >
         <div class="im-one" >
-          <img id="image" :src="`/static/data/${images[selected]}`" />
+          <img id="image" :src="`/static/data/${images[from]}`" />
         </div>
         
         <div class="im-two">
-          <img id="image" :src="`/static/data/${images[selected + 1]}`" />
+          <img id="image" :src="`/static/data/${images[to]}`" />
         </div>
 
         <div class="lbl-one" v-if="labels && labels.length == 2">
           <table>
             <thead>
               <th>
-                match
+                #
               </th>
               <th>
                 X
@@ -49,9 +49,9 @@
               </th>
             </thead>
 
-            <tr v-for="label in labels[0]">
-              <td>
-                <input type="radio" />
+            <tr v-for="label, i in labels[0]">
+              <td style="text-align: center;">
+                {{ i + 1 }}
               </td>
               <td>
                 {{ label[1] }}
@@ -89,9 +89,13 @@
               </th>
             </thead>
 
-            <tr v-for="label in labels[1]">
+            <tr v-for="label, i in labels[1]">
               <td>
-                <input type="radio" />
+                <select v-model="matches[i]">
+                  <option v-for="j in labels[0].length" >
+                    {{ j }}
+                  </option>
+                </select>
               </td>
               <td>
                 {{ label[1] }}
@@ -107,6 +111,12 @@
               </td>
             </tr>
           </table>
+        </div>
+
+        <div class="options">
+          <button @click="save">
+            Save
+          </button>
         </div>
       </div>
 
@@ -127,8 +137,11 @@
             </td>
 
             <td>
-              <button @click="() => { setImage(i) }">
-                Show
+              <button style="margin-right: 0.5rem;" @click="() => { setFrom(i) }">
+                From
+              </button>
+              <button @click="() => { setTo(i) }">
+                To
               </button>
             </td>
           </tr>
@@ -169,8 +182,10 @@
           data() {
             return {
               images: [],
-              selected: null,
               labels: [],
+              from: null,
+              to: null,
+              matches: [],
             }
           },
           methods: {
@@ -179,36 +194,79 @@
               .then(resp => {
                 console.log(resp);
                 this.images = resp.data.images;
-                this.setImage(0);
               }).catch(err => {
                 console.error(err);
               });
             },
-            setImage: function (i) {
-              this.selected = i;
-              this.getLabels();
+            setFrom: function (i) {
+              this.from = i;
+              
+              axios.get(`/lbl?img=${this.images[this.from]}`)
+              .then(resp => {
+                this.labels[0] = resp.data;
+                this.matches = this.labels[0].map((l, i) => i+1);
+              }).catch(err => {
+                console.error(err);
+              });
             },
-            getLabels: function () {
+            setTo: function (i) {
+              this.to = i;
+              
+              axios.get(`/lbl?img=${this.images[this.to]}`)
+              .then(resp => {
+                this.labels[1] = resp.data;
+              }).catch(err => {
+                console.error(err);
+              });
+            },
+            resetLabels: function () {
               this.labels = [];
               
-              axios.get(`/lbl?img=${this.images[this.selected]}`)
+              axios.get(`/lbl?img=${this.images[this.from]}`)
               .then(resp => {
-                console.log(resp);
                 this.labels.push(resp.data);
+                this.matches = this.labels[0].map((l, i) => i+1);
               }).catch(err => {
                 console.error(err);
               });
 
-              axios.get(`/lbl?img=${this.images[this.selected + 1]}`)
+              axios.get(`/lbl?img=${this.images[this.to]}`)
               .then(resp => {
-                console.log(resp);
                 this.labels.push(resp.data);
               }).catch(err => {
                 console.error(err);
               });
+              
+            },
+            save: function () {
+              let annots = {
+                'data': this.labels[0].map((l, i) => {
+                  console.log(i, this.matches.length);
+                  if (i + 1 > this.labels[0].length) {
+                    return null;
+                  }
+
+                  let m = this.labels[1][this.matches[i] - 1];
+                  return {
+                    t: 0,
+                    x: m[1] - l[1],
+                    y: m[2] - l[2],
+                    h: m[3] - l[3],
+                    w: m[4] - l[4]
+                  }
+                }),
+                'from_image': this.images[this.from],
+                'to_image': this.images[this.to]
+              }
+
+              axios.post('/annot', annots)
+              .then(resp => {
+                console.log(resp);
+              }).catch(err => {
+                console.error(err);
+              });
             }
-            
-            
+
           }
         }).mount('#app')
       </script>

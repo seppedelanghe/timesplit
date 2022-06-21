@@ -3,7 +3,7 @@ from fastapi import FastAPI, HTTPException, UploadFile
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
-from lib.models import TDA
+from lib.models import TDA, Annotation
 from lib.utils import save_tda, get_all, upload_images, upload_labels, get_lbl_for_img
 
 app = FastAPI()
@@ -21,9 +21,10 @@ async def get():
 async def annot(img: str):
     return get_lbl_for_img(img)
 
-@app.post('/annot/{uid}')
-async def annot(tda: TDA, uid: str):
-    save_tda(tda, uid)
+@app.post('/annot')
+async def annot(annot: Annotation):
+    print(annot)
+    save_tda(annot)
     return "OK"
 
 @app.post('/img')

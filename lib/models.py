@@ -1,3 +1,4 @@
+from typing import List, Optional
 from pydantic import BaseModel
 
 
@@ -10,5 +11,6 @@ class TDA(BaseModel):
     h: float
 
 class Annotation(BaseModel):
-    im_uid: str
-    tda: TDA
+    from_image: Optional[str]
+    to_image: Optional[str]
+    data: List[TDA]

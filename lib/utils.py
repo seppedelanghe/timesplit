@@ -20,7 +20,7 @@ def load_db():
 
     with open(DB_PATH, 'r') as f:
         db = json.loads(f.read())
-        db = [Annotation.parse_obj(x) for x in db]
+        return [Annotation.parse_obj(x) for x in db]
 
 def save_db(db: List[Annotation]):
     db = [x.dict() for x in db]
@@ -31,7 +31,7 @@ def save_db(db: List[Annotation]):
     return True
 
 def save_tda(annot: Annotation):
-    db = load_db()    
+    db = load_db()  
     db.append(annot)
     save_db(db)
 

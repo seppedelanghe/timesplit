@@ -31,7 +31,7 @@ form {
     margin: 1rem; 
     padding: 0.5rem; 
     display: grid; 
-    grid-template-columns: 1fr 440px; 
+    grid-template-columns: 1fr 440px;
     gap: 1rem;
     border: solid 1px black;
 
@@ -58,4 +58,24 @@ form {
         grid-column: 2;
         grid-row: 2;
     }
+
+    .options {
+        // border-top: 1px solid black;
+        grid-row: 3;
+        grid-column: 1 / span 2;
+
+        text-align: right;
+        padding: 0.5rem 1rem;
+
+        button {
+            outline: none;
+            border: 1px solid black;
+            padding: 0.5rem 2rem;
+            border-radius: 4px;
+        }
+    }
+}
+
+button {
+    cursor: pointer;
 }

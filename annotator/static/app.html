@@ -228,7 +228,7 @@
               .then(resp => {
                 this.labels[0] = resp.data;
                 this.matches = this.labels[0].map((l, i) => i+1);
-                this.colors = this.labels[0].map((l, i) => `#${Math.floor(Math.random()*16777215).toString(16)}`);
+                this.colors = this.labels[0].map(l => `#${Math.floor(Math.random()*16777215).toString(16)}`);
               }).catch(err => {
                 console.error(err);
               });

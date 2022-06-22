@@ -2,7 +2,7 @@ import torch, os
 import torch.nn as nn
 
 from typing import List
-from sf import SFDataset
+from sf import TDADataset
 from torch.utils.data import DataLoader
 
 class CNNBlock(nn.Module):
@@ -54,10 +54,10 @@ class TimeModel(nn.Module):
     def _create_fcs_layers(self):
         return nn.Sequential(
             nn.Flatten(),
-            # nn.Linear(1536, 256),
-            # nn.Dropout(0.1),
-            # nn.LeakyReLU(0.1),
-            # nn.Linear(256, 6) # is_same, time_increasement, x_change, y_change, w_change, h_change
+            nn.Linear(1536, 256),
+            nn.Dropout(0.1),
+            nn.LeakyReLU(0.1),
+            nn.Linear(256, 5) # time_increasement, x_change, y_change, w_change, h_change
         )
 
     def forward(self, a, b):
@@ -94,9 +94,9 @@ OUT_CNN = [
 if __name__ == '__main__':
     m = TimeModel(IN_CNN, OUT_CNN)
 
-    TEST_SF = os.path.join('E:/Datasets/Football/biggy', "test.json")
+    TEST_DB = os.path.join('D:/Projects/eleven/timesplit/annotator/static/data', "db.json")
 
-    test_dataset = SFDataset(TEST_SF)
+    test_dataset = TDADataset(TEST_DB)
     test_loader = DataLoader(
         dataset=test_dataset,
         batch_size=2,
@@ -106,8 +106,11 @@ if __name__ == '__main__':
         drop_last=False
     )
     
+    print(len(test_dataset))
 
-    for x in test_loader:
-        x = x.to('cpu')
-        out = m(x, x)
+    for a, b, y in test_loader:
+        a = a.to('cpu')
+        b = b.to('cpu')
+        out = m(a, b)
+
         break

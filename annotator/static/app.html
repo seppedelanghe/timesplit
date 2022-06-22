@@ -45,8 +45,8 @@
             <rect :x="(l[1] * 1280) - (l[3] * 1280 / 2)" 
                   :y="(l[2] * 720) - (l[4] * 720 / 2)" 
                   :width="l[3] * 1280" :height="l[4] * 720" 
-                  :stroke="colors[matches[i] - 1]"
-                  v-for="l, i in labels[0]" />
+                  :stroke='colors[matches[i] - 1] ? colors[matches[i] - 1] : "black"'
+                  v-for="l, i in labels[1]" />
           </svg>
         </div>
 
@@ -208,6 +208,7 @@
               to: null,
               matches: [],
               colors: [],
+              time: 1,
             }
           },
           methods: {
@@ -239,6 +240,7 @@
               axios.get(`/lbl?img=${this.images[this.to]}`)
               .then(resp => {
                 this.labels[1] = resp.data;
+                this.time = parseInt(this.images[this.to].split('_')[1].split('.')[0]) - parseInt(this.images[this.from].split('_')[1].split('.')[0]);
               }).catch(err => {
                 console.error(err);
               });

@@ -20,9 +20,9 @@
     </header>
 
     <main id="app">
-      <div v-if="from != null && to != null" class="editor" >
+      <div v-if="from != null && to != null && images[to] && images[from]" class="editor" >
         <div class="im-one" >
-          <img id="image" :src="`/static/data/${images[from]}`" />
+          <img id="image" :src="`/static/data/images/${images[from]}`" />
         </div>
         
         <div class="bb-one">
@@ -37,7 +37,7 @@
         
         
         <div class="im-two">
-          <img id="image" :src="`/static/data/${images[to]}`" />
+          <img id="image" :src="`/static/data/images/${images[to]}`" />
         </div>
 
         <div class="bb-two">
@@ -141,7 +141,7 @@
         </div>
       </div>
 
-      <table class="list">
+      <table class="list" v-if="images && images.length > 0">
         <thead>
           <th>
             name

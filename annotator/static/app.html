@@ -282,14 +282,20 @@
 
               let annots = {
                 'data': this.labels[0].map((l, i) => {
-                  console.log(i, this.matches.length);
-                  if (i + 1 > this.labels[0].length) {
-                    return null;
-                  }
+                  let t = this.images[this.from].split('_')
 
                   let m = this.labels[1][this.matches[i] - 1];
+                  if (m == undefined) {
+                    return {
+                      t: this.time,
+                      x: -1,
+                      y: -1,
+                      h: -1,
+                      w: -1
+                    }
+                  }
                   return {
-                    t: 0,
+                    t: this.time,
                     x: m[1] - l[1],
                     y: m[2] - l[2],
                     h: m[3] - l[3],

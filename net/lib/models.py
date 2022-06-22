@@ -1,5 +1,6 @@
 from typing import List, Optional
 from pydantic import BaseModel
+from torch import tensor
 
 class TDA(BaseModel):
     t: int
@@ -19,6 +20,9 @@ class TDA(BaseModel):
             self.w,
             self.h
         ]
+    
+    def as_tensor(self):
+        return tensor(self.as_list())
 
 class Annotation(BaseModel):
     from_image: Optional[str]

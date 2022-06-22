@@ -60,8 +60,5 @@ class TimeModel(nn.Module):
     def forward(self, a, b):
         xa = self.cnn_in(a)
         xb = self.cnn_out(b)
-        # print(xa.shape, xb.shape)
-
         x = torch.hstack((xa, xb))
-        # print(x.shape)
         return self.fcs(x)

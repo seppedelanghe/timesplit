@@ -25,8 +25,21 @@
           <img id="image" :src="`/static/data/${images[from]}`" />
         </div>
         
+        <div class="bb-one">
+          <svg viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg">
+            <rect :x="(l[1] * 1280) - (l[3] * 1280 / 2)" :y="(l[2] * 720) - (l[4] * 720 / 2)" :width="l[3] * 1280" :height="l[4] * 720" v-for="l in labels[0]" />
+          </svg>
+        </div>
+        
+        
         <div class="im-two">
           <img id="image" :src="`/static/data/${images[to]}`" />
+        </div>
+
+        <div class="bb-two">
+          <svg viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg">
+            <rect :x="(l[1] * 1280) - (l[3] * 1280 / 2)" :y="(l[2] * 720) - (l[4] * 720 / 2)" :width="l[3] * 1280" :height="l[4] * 720" v-for="l in labels[0]" />
+          </svg>
         </div>
 
         <div class="lbl-one" v-if="labels && labels.length == 2">

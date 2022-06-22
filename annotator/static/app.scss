@@ -28,18 +28,17 @@ form {
 }
 
 .editor {
-    max-width: calc(800px + 440px);
+    max-width: calc(640px + 440px + 1rem);
     margin: 1rem;
     display: grid; 
-    grid-template-columns: 1fr 440px;
+    grid-template-columns: 640px 440px;
+    grid-template-rows: 480px 480px;
     border: solid 1px black;
     gap: 0 1rem;
 
     img {
-        margin: 1rem;
-        width: 100%;
-        max-width: 800px;
-        min-width: 320px;
+        height: 360px;
+        width: 640px;
     }
 
     table {
@@ -55,11 +54,43 @@ form {
     .im-one {
         grid-column: 1;
         grid-row: 1;
+        margin: 1rem;
+        height: 360px;
+        width: 640px;
+    }
+    
+    .bb-one {
+        grid-row: 1;
+        grid-column: 1;
+        margin: 1rem;
+        height: 360px;
+        width: 640px;
+    }
+
+    .bb-two {
+        grid-row: 2;
+        grid-column: 1;
+        margin: 1rem;
+        height: 360px;
+        width: 640px;
     }
 
     .im-two {
         grid-column: 1;
         grid-row: 2;
+        margin: 1rem;
+    }
+
+
+    svg {
+        height: 360px;
+        width: 640px;
+
+        rect {
+            stroke: red;
+            stroke-width: 3px;
+            fill: transparent;
+        }
     }
 
     .lbl-one {

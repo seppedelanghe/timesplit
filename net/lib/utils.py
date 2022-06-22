@@ -1,11 +1,12 @@
 import os, json, re
 from typing import List
-from lib.models import TDA, Annotation
+from net.lib.models import Annotation
 from fastapi import HTTPException, UploadFile
 
 BASE_PATH = 'annotator/static/'
-SAVE_PATH = os.path.join(BASE_PATH, 'data')
-DB_PATH = os.path.join(SAVE_PATH, 'db.json')
+DATA_PATH = os.path.join(BASE_PATH, 'data')
+SAVE_PATH = os.path.join(DATA_PATH, 'images')
+DB_PATH = os.path.join(DATA_PATH, 'db.json')
 os.makedirs(SAVE_PATH, exist_ok=True)
 
 def sorted_nicely(l): 

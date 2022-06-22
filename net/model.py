@@ -1,9 +1,6 @@
-import torch, os
+import torch
 import torch.nn as nn
-
 from typing import List
-from sf import TDADataset
-from torch.utils.data import DataLoader
 
 class CNNBlock(nn.Module):
     def __init__(self, in_channels, out_channels, **kwargs):
@@ -54,7 +51,7 @@ class TimeModel(nn.Module):
     def _create_fcs_layers(self):
         return nn.Sequential(
             nn.Flatten(),
-            nn.Linear(1536, 256),
+            nn.Linear(3072, 256),
             nn.Dropout(0.1),
             nn.LeakyReLU(0.1),
             nn.Linear(256, 5) # time_increasement, x_change, y_change, w_change, h_change
@@ -63,54 +60,8 @@ class TimeModel(nn.Module):
     def forward(self, a, b):
         xa = self.cnn_in(a)
         xb = self.cnn_out(b)
-        print(xa.shape, xb.shape)
+        # print(xa.shape, xb.shape)
 
-        x = torch.vstack((xa, xb))
-        print(x.shape)
-        x = self.fcs(x)
-
-        print(x.shape, '\n')
-        
-
-
-IN_CNN = [
-    # Tuple: (kernel_size, n_filters, stride, padding)
-    (7, 64, 2, 3),
-    ("M", 2, 2), # Max pooling, kernel_size, stride
-    (3, 192, 1, 1),
-    ("M", 2, 2),
-    (1, 128, 1, 0)
-]
-
-OUT_CNN = [
-    # Tuple: (kernel_size, n_filters, stride, padding)
-    (7, 64, 2, 3),
-    ("M", 2, 2), # Max pooling, kernel_size, stride
-    (3, 192, 1, 1),
-    ("M", 2, 2),
-    (1, 128, 1, 0)
-]
-
-if __name__ == '__main__':
-    m = TimeModel(IN_CNN, OUT_CNN)
-
-    TEST_DB = os.path.join('D:/Projects/eleven/timesplit/annotator/static/data', "db.json")
-
-    test_dataset = TDADataset(TEST_DB)
-    test_loader = DataLoader(
-        dataset=test_dataset,
-        batch_size=2,
-        num_workers=1,
-        pin_memory=False,
-        shuffle=False,
-        drop_last=False
-    )
-    
-    print(len(test_dataset))
-
-    for a, b, y in test_loader:
-        a = a.to('cpu')
-        b = b.to('cpu')
-        out = m(a, b)
-
-        break
+        x = torch.hstack((xa, xb))
+        # print(x.shape)
+        return self.fcs(x)

@@ -73,7 +73,7 @@
               </th>
             </thead>
 
-            <tr v-for="label, i in labels[0]">
+            <tr v-for="label, i in labels[0]" @click="() => { selectedRows[0] = i; }" :class="selectedRows[0] == i ? 'selected-row' : ''">
               <td style="text-align: center;">
                 {{ i + 1 }}
               </td>
@@ -116,7 +116,7 @@
               </th>
             </thead>
 
-            <tr v-for="label, i in labels[1]">
+            <tr v-for="label, i in labels[1]" @click="() => { selectedRows[1] = i; }" :class="selectedRows[1] == i ? 'selected-row' : ''">
               <td>
                 <select v-model="matches[i]">
                   <option v-for="j in labels[0].length" >
@@ -218,6 +218,7 @@
               matches: [],
               colors: [],
               time: 1,
+              selectedRows: [-1, -1]
             }
           },
           methods: {

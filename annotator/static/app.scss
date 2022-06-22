@@ -47,7 +47,11 @@ form {
             background-color: lightgrey;
         }
 
+        tr { cursor: pointer; }
+
         tr:nth-child(even) {background-color: #c2f2f2;}
+
+        tr.selected-row {background-color: red;}
     }
     
     .im-one {

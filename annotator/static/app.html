@@ -68,6 +68,9 @@
               <th>
                 H
               </th>
+              <th>
+                Color
+              </th>
             </thead>
 
             <tr v-for="label, i in labels[0]">
@@ -85,6 +88,9 @@
               </td>
               <td>
                 {{ label[4] }}
+              </td>
+              <td :style="`background-color: ${colors[i]};`">
+                {{ colors[i] }}
               </td>
             </tr>
           </table>
@@ -129,6 +135,9 @@
               </td>
               <td>
                 {{ label[4] }}
+              </td>
+              <td :style="`background-color: ${colors[matches[i] - 1]};`">
+                {{ colors[matches[i] - 1] }}
               </td>
             </tr>
           </table>

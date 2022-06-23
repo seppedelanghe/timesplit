@@ -1,4 +1,5 @@
 import os, json, re
+from PIL import Image
 from typing import List
 from net.lib.models import Annotation
 from fastapi import HTTPException, UploadFile
@@ -74,3 +75,50 @@ def get_lbl_for_img(img: str):
             lbls.append([float(x) for x in line.strip().split(' ')])
 
     return lbls
+
+
+def crop_object(im: Image, coords: tuple, is_to: bool = False):
+    imw, imh = im.size
+    x, y, w, h = int(coords[0] * imw), int(coords[1] * imh), int(coords[2] * imw), int(coords[3] * imh)
+
+    # if is for a 'to' image, increase the size of the search box
+    if is_to:
+        w = int(h * 1.2)
+        h = int(h * 1.2)
+
+    # clamping values to fit to the image
+    x1 = max(0, min(x-w, imw))
+    x2 = max(0, min(x+w, imw))
+    y1 = max(0, min(y-h, imh))
+    y2 = max(0, min(y+h, imh))
+
+
+    return im.crop((x1, y1, x2, y2))
+
+def export_db():
+    db = load_db()
+    data = []
+    CROP_DIR = os.path.join(SAVE_PATH, 'crops')
+    os.makedirs(CROP_DIR, exist_ok=True)
+
+    for x in db:
+        original_lbls = get_lbl_for_img(x.from_image)
+        for i, lbl in enumerate(original_lbls):
+            if any([y == -1 for y in x.data[i].as_list()]):
+                continue
+
+            frm = crop_object(Image.open(os.path.join(SAVE_PATH, x.from_image)), lbl[1:])
+            to = crop_object(Image.open(os.path.join(SAVE_PATH, x.to_image)), lbl[1:], True)
+            frm.save(os.path.join(CROP_DIR, f"{i}_{x.from_image}"))
+            to.save(os.path.join(CROP_DIR, f"{i}_{x.to_image}"))
+
+            data.append({
+                'from': f"{i}_{x.from_image}",
+                'to': f"{i}_{x.to_image}",
+                'tda': x.data[i].dict()
+            })
+        
+    with open(os.path.join(DATA_PATH, 'export.json'), 'w') as f:
+        f.write(json.dumps(data))
+
+    return data

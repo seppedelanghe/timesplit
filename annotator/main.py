@@ -4,7 +4,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from net.lib.models import Annotation
-from net.lib.utils import save_tda, get_all, upload_images, upload_labels, get_lbl_for_img
+from net.lib.utils import export_db, save_tda, get_all, upload_images, upload_labels, get_lbl_for_img
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="annotator/static"), name='static')
@@ -37,4 +37,10 @@ async def upload_label(files: List[UploadFile]):
     upload_labels(files)
     return RedirectResponse('/', status_code=302)
 
-
+@app.get('/export')
+async def export():
+    try:
+        export_db()
+        return 'Export saved in data path'
+    except:
+        return 'Failed to export, please check logs.'

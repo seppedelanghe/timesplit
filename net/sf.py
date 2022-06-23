@@ -1,3 +1,4 @@
+import sys
 import torch, os, json
 import numpy as np
 from PIL import Image
@@ -48,7 +49,7 @@ class TDADataset(torch.utils.data.Dataset):
         y1 = max(0, min(y-h, imw))
         y2 = max(0, min(y+h, imw))
 
-        return im.crop((x1, y1, x2, y2))
+        return im.crop((x1, y1, x2, y2)).save('a.png')
 
     def __getitem__(self, index):
         # calculate true index

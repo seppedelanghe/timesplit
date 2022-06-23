@@ -3,7 +3,7 @@ from fastapi import FastAPI, UploadFile
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
-from net.lib.models import Annotation
+from net.lib.models import WebAnnotation
 from net.lib.utils import export_db, save_tda, get_all, upload_images, upload_labels, get_lbl_for_img
 
 app = FastAPI()
@@ -22,7 +22,7 @@ async def annot(img: str):
     return get_lbl_for_img(img)
 
 @app.post('/annot')
-async def annot(annot: Annotation):
+async def annot(annot: WebAnnotation):
     print(annot)
     save_tda(annot)
     return "OK"

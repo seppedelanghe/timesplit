@@ -1,7 +1,7 @@
 import os, json, re
 from PIL import Image
 from typing import List
-from net.lib.models import Annotation
+from net.lib.models import WebAnnotation
 from fastapi import HTTPException, UploadFile
 
 BASE_PATH = 'annotator/static/'
@@ -22,9 +22,9 @@ def load_db():
 
     with open(DB_PATH, 'r') as f:
         db = json.loads(f.read())
-        return [Annotation.parse_obj(x) for x in db]
+        return [WebAnnotation.parse_obj(x) for x in db]
 
-def save_db(db: List[Annotation]):
+def save_db(db: List[WebAnnotation]):
     db = [x.dict() for x in db]
 
     with open(DB_PATH, 'w') as f:
@@ -32,7 +32,7 @@ def save_db(db: List[Annotation]):
 
     return True
 
-def save_tda(annot: Annotation):
+def save_tda(annot: WebAnnotation):
     db = load_db()  
     db.append(annot)
     save_db(db)
@@ -113,7 +113,7 @@ def export_db():
             to.save(os.path.join(CROP_DIR, f"{i}_{x.to_image}"))
 
             data.append({
-                'from': f"{i}_{x.from_image}",
+                'frm': f"{i}_{x.from_image}",
                 'to': f"{i}_{x.to_image}",
                 'tda': x.data[i].dict()
             })

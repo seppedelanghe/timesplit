@@ -2,12 +2,14 @@ import os
 
 from model import TimeModel
 from loss import TimeSplitLoss
-from sf import TDADataset
+from dataset import TDADataset
 from torch.utils.data import DataLoader
 from torch.optim import Adam
 from tqdm import tqdm
 
-TEST_DB = os.path.join('D:/Projects/eleven/timesplit/annotator/static/data', "db.json")
+TEST_DB = os.path.join('D:/Projects/eleven/timesplit/annotator/static/data', "export.json")
+IMG_DIR = 'D:/Projects/eleven/timesplit/annotator/static/data/images/crops'
+DEVICE = "cpu"
 
 IN_CNN = [
     # Tuple: (kernel_size, n_filters, stride, padding)
@@ -27,13 +29,12 @@ OUT_CNN = [
     (1, 128, 1, 0)
 ]
 
-DEVICE = "cpu"
 
 m = TimeModel(IN_CNN, OUT_CNN).to(DEVICE)
 loss_fn = TimeSplitLoss()
 opt = Adam(m.parameters(), lr=1e-3, weight_decay=0)
 
-test_dataset = TDADataset(TEST_DB)
+test_dataset = TDADataset(TEST_DB, IMG_DIR)
 test_loader = DataLoader(
     dataset=test_dataset,
     batch_size=8,
